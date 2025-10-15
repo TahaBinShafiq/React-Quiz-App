@@ -103,6 +103,7 @@ function Question() {
     let [options, setOptions] = useState([])
     let [score, setScore] = useState(0)
     let [selectedAnswer, setSelectedAnswer] = useState(null);
+    let [startQuiz , setStartQuiz] = useState(false)
 
     useEffect(() => {
         if (questions[incQuestion]) {
@@ -136,7 +137,7 @@ function Question() {
         }
 
             {incQuestion < questions.length ?
-                <div>
+                <div >
 
                     {options.map((opt, i) => {
                         return (
@@ -146,8 +147,13 @@ function Question() {
                 </div> : <p>Your Score is {score}/10</p>
 
             }
-            <div onClick={selectedAnswer ? nextQues : undefined} >
-                <Button/>
+            <div onClick={selectedAnswer ? nextQues : undefined}
+                style={{
+                    opacity: selectedAnswer ? 1 : 0.5,
+                    pointerEvents: selectedAnswer ? 'auto' : 'none',
+                    cursor: selectedAnswer ? 'pointer' : 'not-allowed',
+                }}>
+                <Button />
             </div>
         </>
     )
