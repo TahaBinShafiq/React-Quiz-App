@@ -127,48 +127,70 @@ function Question() {
         setSelectedAnswer(null);
     }
 
+
     return (
         <>
 
             {!startQuiz ? (
                 <div>
 
-                    <p>Select Number of Questions:</p>
+                    <p>Total Question is 10</p>
 
-                    <div onClick={() => setStart(true)}>
+                    <div onClick={() => setStartQuiz(true)}>
                         <Button text="Start Quiz" />
                     </div>
                 </div>
-            ) : ("")}
+            ) :
 
+                <>
 
-            {incQuestion < questions.length ?
-                <p id={questions[incQuestion].id}>
-                    <span>({questions[incQuestion].id}/10)</span>
-                    {questions[incQuestion].question}
-                    {score}
-                </p> : <p>Quiz Complete</p>
-            }
-
-            {incQuestion < questions.length ?
-                <div >
-
-                    {options.map((opt, i) => {
-                        return (
-                            <div key={i} onClick={() => handleSelect(opt)}>{opt}</div>
+                    {/* Show Question and Complete Quiz  */}
+                    {incQuestion < questions.length ?
+                        <p id={questions[incQuestion].id}>
+                            <span>({questions[incQuestion].id}/10)</span>
+                            {questions[incQuestion].question}
+                            {score}
+                        </p> : (
+                            <>
+                                <p>Quiz Complete</p>
+                            </>
                         )
-                    })}
-                </div> : <p>Your Score is {score}/10</p>
 
+                    }
+
+
+                    {/* Show Options  */}
+                    {incQuestion < questions.length ?
+                        <div >
+                            {options.map((opt, i) => {
+                                return (
+                                    <div key={i} onClick={() => handleSelect(opt)}>{opt}</div>
+                                )
+                            })}
+                        </div> : <>
+                            <p>Your Score is {score}/10</p>
+                            <p>{score <= 5 ? "Keep practicing!" : "Nice job!"}</p>
+                        </>
+                    }
+
+                    {/* button  */}
+
+                    <div onClick={incQuestion > 9 ? () => {
+                        setStartQuiz(true);
+                        setIncQuestion(0);
+                        setScore(0);
+                        setSelectedAnswer(null);
+                    }
+                        : selectedAnswer ? nextQues : undefined}
+                        style={{
+                            opacity: selectedAnswer || incQuestion > 9 ? 1 : 0.5,
+                            pointerEvents: selectedAnswer || incQuestion > 9 ? 'auto' : 'none',
+                            cursor: selectedAnswer || incQuestion > 9 ? 'pointer' : 'not-allowed',
+                        }}>
+                        <button>{incQuestion > 9 ? "Restart Quiz" : "Next"}</button>
+                    </div>
+                </>
             }
-            <div onClick={selectedAnswer ? nextQues : undefined}
-                style={{
-                    opacity: selectedAnswer ? 1 : 0.5,
-                    pointerEvents: selectedAnswer ? 'auto' : 'none',
-                    cursor: selectedAnswer ? 'pointer' : 'not-allowed',
-                }}>
-                <Button />
-            </div>
 
         </>
     )
