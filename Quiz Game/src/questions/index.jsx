@@ -97,17 +97,24 @@ function Question() {
                 "Jane Austen",
             ],
         },
+    ])
 
+    let [incQuestion, setIncQuestion] = useState(0)
 
-        function showQuest() {
-            console.log(questions)
+    function nextQues() {
+        setIncQuestion((prev) => prev + 1)
+    }
+
+    return (
+        <>{incQuestion < questions.length ?
+            <p id={questions[incQuestion].id}>
+                {questions[incQuestion].question}
+            </p> : <p>Quiz Complete</p>
         }
 
-    ])
-    return (
-        <>
-            <p>Hello</p>
-            <Button />
+            <div onClick={nextQues}>
+                <Button />
+            </div>
         </>
     )
 }
