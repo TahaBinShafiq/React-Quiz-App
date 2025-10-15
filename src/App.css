@@ -27,6 +27,16 @@
   }
 }
 
+.singleOpt{
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.singleOpt:hover{
+  background-color: rgb(69, 69, 69) !important;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;

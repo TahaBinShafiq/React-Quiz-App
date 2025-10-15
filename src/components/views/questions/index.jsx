@@ -149,7 +149,6 @@ function Question() {
                         <p id={questions[incQuestion].id}>
                             <span>({questions[incQuestion].id}/10)</span>
                             {questions[incQuestion].question}
-                            {score}
                         </p> : (
                             <>
                                 <p>Quiz Complete</p>
@@ -164,7 +163,9 @@ function Question() {
                         <div >
                             {options.map((opt, i) => {
                                 return (
-                                    <div key={i} onClick={() => handleSelect(opt)}>{opt}</div>
+                                    <div className="options" key={i} onClick={() => handleSelect(opt)}>
+                                        <p className="singleOpt">{opt}</p>
+                                    </div>
                                 )
                             })}
                         </div> : <>
