@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Button from "./Button"
 
 function Question() {
@@ -100,17 +100,36 @@ function Question() {
     ])
 
     let [incQuestion, setIncQuestion] = useState(0)
+    let [options, setOptions] = useState([])
+
+    useEffect(() => {
+        if (questions[incQuestion]) {
+            setOptions([...questions[incQuestion].options, questions[incQuestion].correct_answer])
+        }
+    }, [incQuestion, questions])
 
     function nextQues() {
         setIncQuestion((prev) => prev + 1)
     }
-
     return (
         <>{incQuestion < questions.length ?
             <p id={questions[incQuestion].id}>
+                <span>({questions[incQuestion].id}/10)</span> 
                 {questions[incQuestion].question}
             </p> : <p>Quiz Complete</p>
         }
+
+        {incQuestion < questions.length ?
+            <div>
+                {options.map((opt, i) => {
+                    return (
+                        <div key={i}>{opt}</div>
+                    )
+                })}
+            </div> : "Your Score is"
+
+        }
+
 
             <div onClick={nextQues}>
                 <Button />
