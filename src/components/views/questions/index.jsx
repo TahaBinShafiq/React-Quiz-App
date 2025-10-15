@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import Button from "./button"
 
+
 function Question() {
     const [questions, setQuestions] = useState([
         {
@@ -104,6 +105,7 @@ function Question() {
     let [score, setScore] = useState(0)
     let [selectedAnswer, setSelectedAnswer] = useState(null);
     let [startQuiz, setStartQuiz] = useState(false)
+    const [totalQuestions, setTotalQuestions] = useState(10);
 
     useEffect(() => {
         if (questions[incQuestion]) {
@@ -125,16 +127,28 @@ function Question() {
         setSelectedAnswer(null);
     }
 
-
-
     return (
-        <>{incQuestion < questions.length ?
-            <p id={questions[incQuestion].id}>
-                <span>({questions[incQuestion].id}/10)</span>
-                {questions[incQuestion].question}
-                {score}
-            </p> : <p>Quiz Complete</p>
-        }
+        <>
+
+            {!startQuiz ? (
+                <div>
+
+                    <p>Select Number of Questions:</p>
+
+                    <div onClick={() => setStart(true)}>
+                        <Button text="Start Quiz" />
+                    </div>
+                </div>
+            ) : ("")}
+
+
+            {incQuestion < questions.length ?
+                <p id={questions[incQuestion].id}>
+                    <span>({questions[incQuestion].id}/10)</span>
+                    {questions[incQuestion].question}
+                    {score}
+                </p> : <p>Quiz Complete</p>
+            }
 
             {incQuestion < questions.length ?
                 <div >

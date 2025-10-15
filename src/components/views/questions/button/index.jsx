@@ -1,6 +1,6 @@
 function Button(){
     return(
-        <button>Next Question</button>
+        <button>Start Quiz</button>
     )
 }
 
