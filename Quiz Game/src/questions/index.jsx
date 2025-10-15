@@ -101,6 +101,7 @@ function Question() {
 
     let [incQuestion, setIncQuestion] = useState(0)
     let [options, setOptions] = useState([])
+    let [score, setScore] = useState(0)
 
     useEffect(() => {
         if (questions[incQuestion]) {
@@ -111,26 +112,33 @@ function Question() {
     function nextQues() {
         setIncQuestion((prev) => prev + 1)
     }
+
+
+    function checkAnswer(answer) {
+        if (answer === questions[incQuestion].correct_answer) {
+            setScore((prev) => prev + 1)
+        }
+        console.log("correct Answer", questions[incQuestion].correct_answer)
+        console.log("User Answer", answer)
+    }
     return (
         <>{incQuestion < questions.length ?
             <p id={questions[incQuestion].id}>
-                <span>({questions[incQuestion].id}/10)</span> 
+                <span>({questions[incQuestion].id}/10)</span>
                 {questions[incQuestion].question}
             </p> : <p>Quiz Complete</p>
         }
 
-        {incQuestion < questions.length ?
-            <div>
-                {options.map((opt, i) => {
-                    return (
-                        <div key={i}>{opt}</div>
-                    )
-                })}
-            </div> : "Your Score is"
+            {incQuestion < questions.length ?
+                <div>
+                    {options.map((opt, i) => {
+                        return (
+                            <div key={i} onClick={() => checkAnswer(opt)}>{opt}</div>
+                        )
+                    })}
+                </div> : <p>Your Score is {score}/10</p>
 
-        }
-
-
+            }
             <div onClick={nextQues}>
                 <Button />
             </div>
