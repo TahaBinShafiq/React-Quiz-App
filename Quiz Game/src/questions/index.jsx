@@ -102,45 +102,52 @@ function Question() {
     let [incQuestion, setIncQuestion] = useState(0)
     let [options, setOptions] = useState([])
     let [score, setScore] = useState(0)
+    let [selectedAnswer, setSelectedAnswer] = useState(null);
 
     useEffect(() => {
         if (questions[incQuestion]) {
-            setOptions([...questions[incQuestion].options, questions[incQuestion].correct_answer])
+            const allOptions = [...questions[incQuestion].options, questions[incQuestion].correct_answer]
+            const shuffledOptions = allOptions.sort(() => Math.random() - 0.5);
+            setOptions(shuffledOptions)
         }
     }, [incQuestion, questions])
 
-    function nextQues() {
-        setIncQuestion((prev) => prev + 1)
+    function handleSelect(answer) {
+        setSelectedAnswer(answer);
     }
 
-
-    function checkAnswer(answer) {
-        if (answer === questions[incQuestion].correct_answer) {
+    function nextQues() {
+        if (selectedAnswer === questions[incQuestion].correct_answer) {
             setScore((prev) => prev + 1)
         }
-        console.log("correct Answer", questions[incQuestion].correct_answer)
-        console.log("User Answer", answer)
+        setIncQuestion(prev => prev + 1);
+        setSelectedAnswer(null);
     }
+
+
+
     return (
         <>{incQuestion < questions.length ?
             <p id={questions[incQuestion].id}>
                 <span>({questions[incQuestion].id}/10)</span>
                 {questions[incQuestion].question}
+                {score}
             </p> : <p>Quiz Complete</p>
         }
 
             {incQuestion < questions.length ?
                 <div>
+
                     {options.map((opt, i) => {
                         return (
-                            <div key={i} onClick={() => checkAnswer(opt)}>{opt}</div>
+                            <div key={i} onClick={() => handleSelect(opt)}>{opt}</div>
                         )
                     })}
                 </div> : <p>Your Score is {score}/10</p>
 
             }
-            <div onClick={nextQues}>
-                <Button />
+            <div onClick={selectedAnswer ? nextQues : undefined} >
+                <Button/>
             </div>
         </>
     )
