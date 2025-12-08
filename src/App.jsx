@@ -50,7 +50,7 @@ function App() {
 
   return (
     <div className="bg-[#1e1e1e] min-h-screen p-6 font-mono text-gray-200">
-      <div className="border-b border-[#3a3a3a] pb-2 flex justify-between items-center mb-4">
+      <div className="border-b border-[#3a3a3a] pb-2 flex justify-between items-center mb-3">
         <h1 className="text-3xl font-bold text-blue-400 tracking-wider">
           Quiz Game
         </h1>
