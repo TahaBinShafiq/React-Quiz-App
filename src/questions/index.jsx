@@ -145,10 +145,6 @@ function Question({
 
   const isQuizOver = incQuestion >= 10 || timeLeft <= 0;
 
-  if (isQuizOver === true) {
-    localStorage.removeItem("incQuestion");
-    localStorage.removeItem("score");
-  }
 
 
   function nextQues() {
