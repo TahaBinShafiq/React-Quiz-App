@@ -1,3 +1,4 @@
+import handleConfetti from "@/cofetti";
 import { useEffect, useState } from "react";
 
 function Question({
@@ -10,9 +11,6 @@ function Question({
   score,
   setScore,
 }) {
-
-
-  
   const [questions] = useState([
     {
       id: 1,
@@ -90,12 +88,6 @@ function Question({
     },
   ]);
 
-  // const [incQuestion, setIncQuestion] = useState(
-  //   () => Number(localStorage.getItem("incQuestion")) || 0
-  // );
-  // const [score, setScore] = useState(
-  //   () => Number(localStorage.getItem("score")) || 0
-  // );
   const [userAnswers, setUserAnswers] = useState(() => {
     const saved = localStorage.getItem("userAnswers");
     return saved ? JSON.parse(saved) : [];
@@ -125,10 +117,6 @@ function Question({
       setOptions(allOptions.sort(() => Math.random() - 0.5));
     }
   }, [incQuestion, questions]);
-
-
-
-
 
   function handleSelect(answer) {
     setSelectedAnswer(answer);
@@ -171,8 +159,7 @@ function Question({
     setSelectedAnswer(null);
     setUserAnswers([]);
     setStartQuiz(true);
-    setTimeLeft(20);
-
+    setTimeLeft(120);
     localStorage.removeItem("incQuestion");
     localStorage.removeItem("score");
     localStorage.removeItem("userAnswers");
@@ -193,7 +180,8 @@ function Question({
             <span className="text-yellow-300 font-bold">10</span>
           </p>
           <p className="text-lg mb-2">
-            Total Time: <span className="text-yellow-300 font-bold">2 Minutes</span>
+            Total Time:{" "}
+            <span className="text-yellow-300 font-bold">2 Minutes</span>
           </p>
           <p className="text-lg mb-6">
             Passing Ratio: <span className="text-green-400 font-bold">50%</span>
@@ -203,8 +191,8 @@ function Question({
               setStartQuiz(true);
               const savedTime = Number(localStorage.getItem("timeLeft"));
               if (!savedTime || savedTime <= 0) {
-                setTimeLeft(20);
-                localStorage.setItem("timeLeft", 20);
+                setTimeLeft(120);
+                localStorage.setItem("timeLeft", 120);
               }
               localStorage.setItem("startQuiz", true);
             }}

@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import Question from "./questions";
+import handleConfetti from "./cofetti";
 
 function App() {
   const [timeLeft, setTimeLeft] = useState(() => {
     const saved = Number(localStorage.getItem("timeLeft"));
-    return saved > 0 ? saved : 20;
+    return saved > 0 ? saved : 120;
   });
 
   const [startQuiz, setStartQuiz] = useState(() => {
@@ -20,6 +21,14 @@ function App() {
   );
 
   const isQuizOver = incQuestion >= 10 || timeLeft <= 0;
+
+  const [confettiLaunched, setConfettiLaunched] = useState(false);
+  useEffect(() => {
+    if (score >= 5 && !confettiLaunched && isQuizOver) {
+      handleConfetti();
+      setConfettiLaunched(true);
+    }
+  }, [confettiLaunched, isQuizOver]);
 
   // Timer
   useEffect(() => {
