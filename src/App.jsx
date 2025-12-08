@@ -22,6 +22,11 @@ function App() {
 
   const isQuizOver = incQuestion >= 10 || timeLeft <= 0;
 
+  if(isQuizOver === true){
+   localStorage.removeItem("incQuestion");
+    localStorage.removeItem("score");
+  }
+
   const [confettiLaunched, setConfettiLaunched] = useState(false);
   useEffect(() => {
     if (score >= 5 && !confettiLaunched && isQuizOver) {
