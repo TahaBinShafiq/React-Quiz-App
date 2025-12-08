@@ -1,53 +1,68 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import Question from "./questions";
 
 function App() {
-
-
   const [timeLeft, setTimeLeft] = useState(() => {
-    return Number(localStorage.getItem("timeLeft")) || 180;
+    const saved = Number(localStorage.getItem("timeLeft"));
+    return saved > 0 ? saved : 120;
   });
 
+  const [startQuiz, setStartQuiz] = useState(() => {
+    return localStorage.getItem("startQuiz") === "true" || false;
+  });
 
-  function Timer() {
-    useEffect(() => {
-      if (timeLeft <= 0) return;
+  const [incQuestion, setIncQuestion] = useState(
+    () => Number(localStorage.getItem("incQuestion")) || 0
+  );
 
-      const interval = setInterval(() => {
-        setTimeLeft((prev) => prev - 1);
-      }, 1000); // 1 second
+  const [score, setScore] = useState(
+    () => Number(localStorage.getItem("score")) || 0
+  );
 
-      return () => clearInterval(interval); // Cleanup on unmount
-    }, [timeLeft]);
-  }
+  const isQuizOver = incQuestion >= 10 || timeLeft <= 0;
+
+  // Timer
+  useEffect(() => {
+    if (!startQuiz || isQuizOver) return;
+    const interval = setInterval(() => {
+      setTimeLeft((prev) => {
+        const newTime = prev - 1;
+        localStorage.setItem("timeLeft", newTime);
+        return newTime;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [startQuiz, isQuizOver]); // depend only on startQuiz
 
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
 
-  console.log(timeLeft);
-
-
   return (
-    <>
-      <div className="bg-[#1e1e1e] min-h-screen p-6 font-mono text-gray-200">
-        <div className="border-b border-[#3a3a3a] pb-0 flex justify-between items-center mb-2.5">
-          <h1
-            className="text-3xl font-bold mb-2
-                 text-blue-400 tracking-wider"
-          >
-            Quiz Game
-          </h1>
-          <div className="text-white font-bold text-2xl">
-            Time Left: {minutes.toString().padStart(2, "0")}:
-            {seconds.toString().padStart(2, "0")}
-          </div>
-        </div>
-
-        <div className="bg-[#252525] p-4 rounded-md border border-[#333] ">
-          <Question timeLeft={timeLeft} setTimeLeft={setTimeLeft} />
+    <div className="bg-[#1e1e1e] min-h-screen p-6 font-mono text-gray-200">
+      <div className="border-b border-[#3a3a3a] pb-2 flex justify-between items-center mb-4">
+        <h1 className="text-3xl font-bold text-blue-400 tracking-wider">
+          Quiz Game
+        </h1>
+        <div className="text-white font-bold text-2xl">
+          Time Left: {minutes.toString().padStart(2, "0")}:
+          {seconds.toString().padStart(2, "0")}
         </div>
       </div>
-    </>
+
+      <div className="bg-[#252525] p-4 rounded-md border border-[#333]">
+        <Question
+          timeLeft={timeLeft}
+          setTimeLeft={setTimeLeft}
+          startQuiz={startQuiz}
+          setStartQuiz={setStartQuiz}
+          incQuestion={incQuestion}
+          setIncQuestion={setIncQuestion}
+          score={score}
+          setScore={setScore}
+        />
+      </div>
+    </div>
   );
 }
 

@@ -1,9 +1,19 @@
 import { useEffect, useState } from "react";
 
-function Question({ timeLeft , setTimeLeft}) {
-  
+function Question({
+  timeLeft,
+  setTimeLeft,
+  startQuiz,
+  setStartQuiz,
+  setIncQuestion,
+  incQuestion,
+  score,
+  setScore,
+}) {
 
-  const [questions, setQuestions] = useState([
+
+  
+  const [questions] = useState([
     {
       id: 1,
       category: "General Knowledge",
@@ -11,7 +21,6 @@ function Question({ timeLeft , setTimeLeft}) {
       correct_answer: "Paris",
       options: ["London", "Berlin", "Madrid"],
     },
-
     {
       id: 2,
       category: "Science",
@@ -19,7 +28,6 @@ function Question({ timeLeft , setTimeLeft}) {
       correct_answer: "Mars",
       options: ["Venus", "Jupiter", "Saturn"],
     },
-
     {
       id: 3,
       category: "Technology",
@@ -38,7 +46,6 @@ function Question({ timeLeft , setTimeLeft}) {
       correct_answer: "France",
       options: ["Brazil", "Germany", "Argentina"],
     },
-
     {
       id: 5,
       category: "Mathematics",
@@ -46,7 +53,6 @@ function Question({ timeLeft , setTimeLeft}) {
       correct_answer: "3.14",
       options: ["3.12", "3.16", "3.18"],
     },
-
     {
       id: 6,
       category: "Geography",
@@ -54,7 +60,6 @@ function Question({ timeLeft , setTimeLeft}) {
       correct_answer: "Pacific Ocean",
       options: ["Indian Ocean", "Arctic Ocean", "Atlantic Ocean"],
     },
-
     {
       id: 7,
       category: "Entertainment",
@@ -62,7 +67,6 @@ function Question({ timeLeft , setTimeLeft}) {
       correct_answer: "Christopher Nolan",
       options: ["Steven Spielberg", "James Cameron", "Quentin Tarantino"],
     },
-
     {
       id: 8,
       category: "History",
@@ -70,7 +74,6 @@ function Question({ timeLeft , setTimeLeft}) {
       correct_answer: "1945",
       options: ["1942", "1944", "1948"],
     },
-
     {
       id: 9,
       category: "Programming",
@@ -78,7 +81,6 @@ function Question({ timeLeft , setTimeLeft}) {
       correct_answer: "React",
       options: ["Laravel", "Django", "Flask"],
     },
-
     {
       id: 10,
       category: "Literature",
@@ -88,25 +90,21 @@ function Question({ timeLeft , setTimeLeft}) {
     },
   ]);
 
-  const [incQuestion, setIncQuestion] = useState(() => {
-    return Number(localStorage.getItem("incQuestion")) || 0;
-  });
-
-  const [score, setScore] = useState(() => {
-    return Number(localStorage.getItem("score")) || 0;
-  });
-
+  // const [incQuestion, setIncQuestion] = useState(
+  //   () => Number(localStorage.getItem("incQuestion")) || 0
+  // );
+  // const [score, setScore] = useState(
+  //   () => Number(localStorage.getItem("score")) || 0
+  // );
   const [userAnswers, setUserAnswers] = useState(() => {
     const saved = localStorage.getItem("userAnswers");
     return saved ? JSON.parse(saved) : [];
   });
 
-  const [startQuiz, setStartQuiz] = useState(() => {
-    return localStorage.getItem("startQuiz") === "true" || false;
-  });
-  let [options, setOptions] = useState([]);
-  let [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [options, setOptions] = useState([]);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
 
+  // Save progress to localStorage
   useEffect(
     () => localStorage.setItem("incQuestion", incQuestion),
     [incQuestion]
@@ -116,29 +114,17 @@ function Question({ timeLeft , setTimeLeft}) {
     () => localStorage.setItem("userAnswers", JSON.stringify(userAnswers)),
     [userAnswers]
   );
-  useEffect(() => localStorage.setItem("startQuiz", startQuiz), [startQuiz]);
 
+  // Shuffle options on question change
   useEffect(() => {
     if (questions[incQuestion]) {
       const allOptions = [
         ...questions[incQuestion].options,
         questions[incQuestion].correct_answer,
       ];
-      const shuffledOptions = allOptions.sort(() => Math.random() - 0.5);
-      setOptions(shuffledOptions);
+      setOptions(allOptions.sort(() => Math.random() - 0.5));
     }
   }, [incQuestion, questions]);
-
-
-   useEffect(() => {
-    if (!startQuiz || timeLeft <= 0) return;
-
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => prev - 1);
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [startQuiz, timeLeft, setTimeLeft]);
 
   function handleSelect(answer) {
     setSelectedAnswer(answer);
@@ -165,6 +151,8 @@ function Question({ timeLeft , setTimeLeft}) {
     });
   }
 
+  const isQuizOver = incQuestion >= 10 || timeLeft <= 0;
+
   function nextQues() {
     if (selectedAnswer === questions[incQuestion].correct_answer) {
       setScore((prev) => prev + 1);
@@ -173,33 +161,32 @@ function Question({ timeLeft , setTimeLeft}) {
     setSelectedAnswer(null);
   }
 
-  console.log(score);
-
-  const isQuizOver = incQuestion >= questions.length || timeLeft <= 0;
-
   function restartQuiz() {
     setIncQuestion(0);
     setScore(0);
     setSelectedAnswer(null);
     setUserAnswers([]);
     setStartQuiz(false);
-    setTimeLeft(180);
+    setTimeLeft(120);
 
     localStorage.removeItem("incQuestion");
-    localStorage.removeItem("score"); 
+    localStorage.removeItem("score");
     localStorage.removeItem("userAnswers");
     localStorage.removeItem("startQuiz");
-    localStorage.removeItem("timeLeft")
+    localStorage.removeItem("timeLeft");
   }
 
   return (
-    <>
-    <div className="min-h-[80vh] bg-[#1e1e1e] text-gray-200 font-mono p-6">
+    <div className="min-h-[60vh]">
+      {/* Start Screen */}
       {!startQuiz && (
         <div className="flex flex-col items-center justify-center min-h-screen text-center">
-          <h1 className="text-3xl font-bold text-purple-400 mb-4">Welcome to the Quiz</h1>
+          <h1 className="text-3xl font-bold text-purple-400 mb-4">
+            Welcome to the Quiz
+          </h1>
           <p className="text-lg mb-2">
-            Total Questions: <span className="text-yellow-300 font-bold">10</span>
+            Total Questions:{" "}
+            <span className="text-yellow-300 font-bold">10</span>
           </p>
           <p className="text-lg mb-6">
             Passing Ratio: <span className="text-green-400 font-bold">50%</span>
@@ -207,9 +194,12 @@ function Question({ timeLeft , setTimeLeft}) {
           <button
             onClick={() => {
               setStartQuiz(true);
-              setTimeLeft(180);
+              const savedTime = Number(localStorage.getItem("timeLeft"));
+              if (!savedTime || savedTime <= 0) {
+                setTimeLeft(120);
+                localStorage.setItem("timeLeft", 120);
+              }
               localStorage.setItem("startQuiz", true);
-              localStorage.setItem("timeLeft", 180);
             }}
             className="px-6 py-3 rounded-sm font-bold bg-blue-600 text-gray-100 hover:bg-blue-700 transition-all"
           >
@@ -218,43 +208,87 @@ function Question({ timeLeft , setTimeLeft}) {
         </div>
       )}
 
+      {/* Quiz Section */}
       {startQuiz && (
-        <div>
-
+        <>
           {isQuizOver ? (
             <div className="mt-6">
-              <h2 className="text-2xl font-bold text-purple-400 mb-4">Quiz Complete</h2>
-              <p className="text-lg mb-1">Your Score: <span className="text-green-400 font-bold">{score}/10</span></p>
-              <p className="text-lg mb-1">Your Percentage: <span className="text-green-400 font-bold">{(score / 10) * 100}%</span></p>
+              <h2 className="text-2xl font-bold text-purple-400 mb-4">
+                Quiz Complete
+              </h2>
+              <p className="text-lg mb-1">
+                Your Score:{" "}
+                <span className="text-green-400 font-bold">{score}/10</span>
+              </p>
+              <p className="text-lg mb-1">
+                Your Percentage:{" "}
+                <span className="text-green-400 font-bold">
+                  {(score / 10) * 100}%
+                </span>
+              </p>
               <p className="text-lg mb-6">
                 {score >= 8 ? (
-                  <span className="text-green-400 font-bold">Excellent! You passed 🎉</span>
+                  <span className="text-green-400 font-bold">
+                    Excellent! You passed 🎉
+                  </span>
                 ) : score >= 5 ? (
-                  <span className="text-yellow-400 font-bold">Good! You passed 🙂</span>
+                  <span className="text-yellow-400 font-bold">
+                    Good! You passed 🙂
+                  </span>
                 ) : (
-                  <span className="text-red-600 font-bold">Don't worry, you can improve! Review the material and try again.</span>
+                  <span className="text-red-600 font-bold">
+                    Don't worry, you can improve! Review the material and try
+                    again.
+                  </span>
                 )}
               </p>
 
               <div className="space-y-4">
                 {userAnswers.map((item, index) => (
-                  <div key={index} className="p-4 bg-[#2a2a2a] border border-[#3a3a3a] rounded-md font-mono">
-                    <p className="text-yellow-300 font-semibold">Q{index + 1}: {item.question}</p>
-                    <p className="text-green-400 mt-1">✓ Correct: {questions[index].correct_answer}</p>
-                    <p className={`mt-1 ${item.selected === item.correct ? "text-green-300" : "text-red-400"}`}>
+                  <div
+                    key={index}
+                    className="p-4 bg-[#2a2a2a] border border-[#3a3a3a] rounded-md font-mono"
+                  >
+                    <p className="text-yellow-300 font-semibold">
+                      Q{index + 1}: {item.question}
+                    </p>
+                    <p className="text-green-400 mt-1">
+                      ✓ Correct: {questions[index].correct_answer}
+                    </p>
+                    <p
+                      className={`mt-1 ${
+                        item.selected === item.correct
+                          ? "text-green-300"
+                          : "text-red-400"
+                      }`}
+                    >
                       • Your Answer: {item.selected}
                     </p>
                   </div>
                 ))}
               </div>
+
               <div className="mt-6 w-fit mx-auto">
-                <button onClick={restartQuiz} className="px-6 py-2 rounded-sm font-bold bg-green-600 text-gray-100 hover:bg-green-700 transition-all">
+                <button
+                  onClick={restartQuiz}
+                  className="px-6 py-2 rounded-sm font-bold bg-green-600 text-gray-100 hover:bg-green-700 transition-all"
+                >
                   Restart Quiz
                 </button>
               </div>
             </div>
           ) : (
-            <>
+            <div>
+              {/* Question */}
+              <div className="mb-4 p-4 bg-[#2a2a2a] border border-[#3a3a3a] rounded-md">
+                <p className="text-yellow-300 font-semibold text-lg">
+                  Q{incQuestion + 1}: {questions[incQuestion].question}
+                </p>
+                <p className="text-sm text-gray-400 mt-1">
+                  Category: {questions[incQuestion].category}
+                </p>
+              </div>
+
               {/* Options */}
               <div className="flex flex-col gap-3">
                 {options.map((opt, i) => (
@@ -287,13 +321,11 @@ function Question({ timeLeft , setTimeLeft}) {
                   </button>
                 </div>
               </div>
-            </>
+            </div>
           )}
-        </div>
+        </>
       )}
     </div>
-
-    </>
   );
 }
 
