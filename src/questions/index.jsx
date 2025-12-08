@@ -126,6 +126,10 @@ function Question({
     }
   }, [incQuestion, questions]);
 
+
+
+
+
   function handleSelect(answer) {
     setSelectedAnswer(answer);
 
@@ -166,8 +170,8 @@ function Question({
     setScore(0);
     setSelectedAnswer(null);
     setUserAnswers([]);
-    setStartQuiz(false);
-    setTimeLeft(120);
+    setStartQuiz(true);
+    setTimeLeft(20);
 
     localStorage.removeItem("incQuestion");
     localStorage.removeItem("score");
@@ -188,6 +192,9 @@ function Question({
             Total Questions:{" "}
             <span className="text-yellow-300 font-bold">10</span>
           </p>
+          <p className="text-lg mb-2">
+            Total Time: <span className="text-yellow-300 font-bold">2 Minutes</span>
+          </p>
           <p className="text-lg mb-6">
             Passing Ratio: <span className="text-green-400 font-bold">50%</span>
           </p>
@@ -196,12 +203,12 @@ function Question({
               setStartQuiz(true);
               const savedTime = Number(localStorage.getItem("timeLeft"));
               if (!savedTime || savedTime <= 0) {
-                setTimeLeft(120);
-                localStorage.setItem("timeLeft", 120);
+                setTimeLeft(20);
+                localStorage.setItem("timeLeft", 20);
               }
               localStorage.setItem("startQuiz", true);
             }}
-            className="px-6 py-3 rounded-sm font-bold bg-blue-600 text-gray-100 hover:bg-blue-700 transition-all"
+            className="px-6 py-3 rounded-sm font-bold cursor-pointer bg-blue-600 text-gray-100 hover:bg-blue-700 transition-all"
           >
             Start Quiz →
           </button>
@@ -271,7 +278,7 @@ function Question({
               <div className="mt-6 w-fit mx-auto">
                 <button
                   onClick={restartQuiz}
-                  className="px-6 py-2 rounded-sm font-bold bg-green-600 text-gray-100 hover:bg-green-700 transition-all"
+                  className="px-6 py-2 cursor-pointer rounded-sm font-bold bg-green-600 text-gray-100 hover:bg-green-700 transition-all"
                 >
                   Restart Quiz
                 </button>
@@ -316,7 +323,7 @@ function Question({
                     cursor: selectedAnswer ? "pointer" : "not-allowed",
                   }}
                 >
-                  <button className="px-6 py-2 rounded-sm font-bold bg-blue-600 text-gray-100 hover:bg-blue-700 transition-all">
+                  <button className="px-6 py-2 cursor-pointer rounded-sm font-bold bg-blue-600 text-gray-100 hover:bg-blue-700 transition-all">
                     Next →
                   </button>
                 </div>

@@ -4,7 +4,7 @@ import Question from "./questions";
 function App() {
   const [timeLeft, setTimeLeft] = useState(() => {
     const saved = Number(localStorage.getItem("timeLeft"));
-    return saved > 0 ? saved : 120;
+    return saved > 0 ? saved : 20;
   });
 
   const [startQuiz, setStartQuiz] = useState(() => {
