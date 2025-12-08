@@ -33,7 +33,7 @@ function App() {
       handleConfetti();
       setConfettiLaunched(true);
     }
-  }, [confettiLaunched, isQuizOver]);
+  }, [score ,confettiLaunched, isQuizOver]);
 
   // Timer
   useEffect(() => {
