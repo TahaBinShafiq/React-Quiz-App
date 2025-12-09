@@ -235,7 +235,7 @@ function Question({
                         Excellent! You passed 🎉
                       </span>
                       <button
-                        className="text-green-400 font-bold border w-[200px] mt-2.5 cursor-pointer p-2 bg-[#1E1E1E]"
+                        className="text-green-400 rounded-[5px] font-bold border w-[200px] mt-2.5 cursor-pointer p-2 bg-[#1E1E1E]"
                         onClick={handleConfetti}
                       >
                         Celebrate Again
@@ -249,7 +249,7 @@ function Question({
                         Good! You passed 🙂
                       </span>
                       <button
-                        className="text-green-400 font-bold border w-[200px] mt-2.5 cursor-pointer p-2 bg-[#1E1E1E]"
+                        className="text-green-400 font-bold rounded-[5px] border w-[200px] mt-2.5 cursor-pointer p-2 bg-[#1E1E1E]"
                         onClick={handleConfetti}
                       >
                         Celebrate Again
