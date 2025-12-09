@@ -19,17 +19,26 @@ function App() {
   const [score, setScore] = useState(
     () => Number(localStorage.getItem("score")) || 0
   );
-
   const isQuizOver = incQuestion >= 10 || timeLeft <= 0;
 
-  
+  useEffect(() => {
+    localStorage.setItem("startQuiz", startQuiz);
+  }, [startQuiz]);
+
+
+  useEffect(() => {
+    if (isQuizOver) {
+      localStorage.setItem("quizCompleted", true);
+    }
+  }, [isQuizOver]);
+
   const [confettiLaunched, setConfettiLaunched] = useState(false);
   useEffect(() => {
     if (score >= 5 && !confettiLaunched && isQuizOver) {
       handleConfetti();
       setConfettiLaunched(true);
     }
-  }, [score ,confettiLaunched, isQuizOver]);
+  }, [score, confettiLaunched, isQuizOver]);
 
   // Timer
   useEffect(() => {
@@ -45,6 +54,16 @@ function App() {
     return () => clearInterval(interval);
   }, [startQuiz, isQuizOver]); // depend only on startQuiz
 
+  useEffect(() => {
+    // Agar quiz already completed nahi hai aur timer 0 ho gaya
+    const quizAlreadyCompleted = JSON.parse(
+      localStorage.getItem("quizCompleted")
+    );
+    if (!quizAlreadyCompleted && timeLeft <= 0) {
+      setStartQuiz(false); // stop quiz
+      localStorage.setItem("quizCompleted", true);
+    }
+  }, [timeLeft]);
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
 

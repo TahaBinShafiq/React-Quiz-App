@@ -145,8 +145,6 @@ function Question({
 
   const isQuizOver = incQuestion >= 10 || timeLeft <= 0;
 
-
-
   function nextQues() {
     if (selectedAnswer === questions[incQuestion].correct_answer) {
       setScore((prev) => prev + 1);
@@ -162,12 +160,18 @@ function Question({
     setUserAnswers([]);
     setStartQuiz(true);
     setTimeLeft(120);
+    setQuizCompleted(false);
+
     localStorage.removeItem("incQuestion");
     localStorage.removeItem("score");
     localStorage.removeItem("userAnswers");
-    localStorage.removeItem("startQuiz");
     localStorage.removeItem("timeLeft");
+    localStorage.removeItem("quizCompleted");
   }
+
+  const [quizCompleted, setQuizCompleted] = useState(
+    JSON.parse(localStorage.getItem("quizCompleted")) || false
+  );
 
   return (
     <div className="min-h-[60vh]">
@@ -208,7 +212,7 @@ function Question({
       {/* Quiz Section */}
       {startQuiz && (
         <>
-          {isQuizOver ? (
+          {startQuiz && (isQuizOver || quizCompleted) ? (
             <div className="mt-6">
               <h2 className="text-2xl font-bold text-purple-400 mb-4">
                 Quiz Complete
@@ -225,13 +229,33 @@ function Question({
               </p>
               <p className="text-lg mb-6">
                 {score >= 8 ? (
-                  <span className="text-green-400 font-bold">
-                    Excellent! You passed 🎉
-                  </span>
+                  <>
+                    <div className="flex flex-col">
+                      <span className="text-green-400 font-bold">
+                        Excellent! You passed 🎉
+                      </span>
+                      <button
+                        className="text-green-400 font-bold border w-[200px] mt-2.5 cursor-pointer p-2 bg-[#1E1E1E]"
+                        onClick={handleConfetti}
+                      >
+                        Celebrate Again
+                      </button>
+                    </div>
+                  </>
                 ) : score >= 5 ? (
-                  <span className="text-yellow-400 font-bold">
-                    Good! You passed 🙂
-                  </span>
+                  <>
+                    <div className="flex flex-col">
+                      <span className="text-yellow-400 font-bold">
+                        Good! You passed 🙂
+                      </span>
+                      <button
+                        className="text-green-400 font-bold border w-[200px] mt-2.5 cursor-pointer p-2 bg-[#1E1E1E]"
+                        onClick={handleConfetti}
+                      >
+                        Celebrate Again
+                      </button>
+                    </div>
+                  </>
                 ) : (
                   <span className="text-red-600 font-bold">
                     Don't worry, you can improve! Review the material and try
