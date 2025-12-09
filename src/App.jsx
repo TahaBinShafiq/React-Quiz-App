@@ -3,6 +3,7 @@ import Question from "./questions";
 import handleConfetti from "./cofetti";
 
 function App() {
+  
   const [timeLeft, setTimeLeft] = useState(() => {
     const saved = Number(localStorage.getItem("timeLeft"));
     return saved > 0 ? saved : 120;
